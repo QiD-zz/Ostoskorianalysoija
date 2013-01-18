@@ -23,6 +23,15 @@ public class Kori implements Serializable{
     
     public Kori(OstosLista lista)
     {
+        Collections.sort(lista);
+        for (int i = 0; i < lista.size()-1; i++)
+        {
+            if (lista.get(i).equals(lista.get(i+1)))
+            {
+                lista.remove(i);
+                i--;
+            }          
+        }
         asiat = lista;
     }
     

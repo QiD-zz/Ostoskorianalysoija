@@ -27,6 +27,7 @@ public class OstosLista extends ArrayList{
         this.addAll(c);
     }
     
+    
     @Override
     public boolean equals(Object obj) {
         

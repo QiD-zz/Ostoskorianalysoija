@@ -39,7 +39,7 @@ public class Tietokanta implements Serializable {
         return rivit;
     }
     
-    public void laskeSaannot()
+    public ArrayList<OstosLista> laskeSaannot()
     {
         ArrayList esineet = new ArrayList();
         for (int i = 0; i < rivit.size(); i++) {
@@ -75,18 +75,17 @@ public class Tietokanta implements Serializable {
         Boolean etsitaanEdelleen = !(ehdokkaat.isEmpty());
         while (etsitaanEdelleen)
         {
-            ArrayList<OstosLista> vanhatEhdokkaat = new ArrayList();
+          //  ArrayList<OstosLista> vanhatEhdokkaat = new ArrayList();
             ArrayList<OstosLista> uudetYleiset = new ArrayList();
             for (int i = 0; i < ehdokkaat.size(); i++) {
                 OstosLista ehdokas = ehdokkaat.get(i);
                 int osumia = 0;
-                Boolean loytyi = false;
+            //    Boolean loytyi = false;
                 for (int j = 0; j < rivit.size(); j++) {
                     Kori k = rivit.get(j);         
 
                     if (ehdokas.equals(k.getKori()))
                     {
-                        System.out.println("Ehdokkuus: " + ehdokas);
                         osumia++;
                     }
 
@@ -142,5 +141,6 @@ public class Tietokanta implements Serializable {
             
             
         }
+        return yleiset;
     }
 }

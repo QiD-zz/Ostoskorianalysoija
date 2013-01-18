@@ -13,6 +13,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -39,6 +40,8 @@ public class Ikkuna extends JFrame {
     private JButton tietokannanTiedot;
     private JPanel alapaneeli;
     private JButton tallenna;
+    private JButton laskeYleiset;
+    private JButton filestaTietoja;
             
     private Tietokanta tietokanta;
     private Kori kori;
@@ -97,14 +100,22 @@ public class Ikkuna extends JFrame {
                 
         lisaa.addActionListener(kuulo);
         
+        laskeYleiset = new JButton("Laske yleiset asiat");
+        laskeYleiset.addActionListener(kuulo);
+        
+        filestaTietoja = new JButton("Lisää tietoja tiedostosta");
+        filestaTietoja.addActionListener(kuulo);
+        
         alapaneeli.add(tietokantaan);
         alapaneeli.add(tietokannanTiedot);
         alapaneeli.add(tallenna);
+        alapaneeli.add(laskeYleiset);
         ylapaneeli.add(comboOn);
         ylapaneeli.add(asiat);
         ylapaneeli.add(kenttaOn);
         ylapaneeli.add(kentta);
         ylapaneeli.add(lisaa);
+        ylapaneeli.add(filestaTietoja);
         
         this.add(ylapaneeli, BorderLayout.NORTH);
         this.add(pane,BorderLayout.CENTER);
@@ -180,6 +191,33 @@ public class Ikkuna extends JFrame {
                    
                 }
         }
+        
+        if (e.getSource().equals(laskeYleiset))
+        {
+            ArrayList<OstosLista> yl = tietokanta.laskeSaannot();
+            area.append("Tietokannassa on tällä hetkellä seuraavat yleiset asiat:\n");
+            for (int i = 0; i < yl.size(); i++) {
+                area.append(yl.get(i).toString()+"\n");
+                
+            }
+        }
+        if (e.getSource().equals(filestaTietoja))
+        {
+                try {
+                    
+                    ArrayList<OstosLista> ol = lisaaTietojaTietokantaan();
+                    int montako = ol.size();
+                    for (int i = 0; i < ol.size(); i++) {
+                        tietokanta.addKori(new Kori(ol.get(i)));
+                        
+                    }
+                    area.append("Lisättiin "+montako+" riviä tietokantaan.\n");
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Ikkuna.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Ikkuna.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
     }
     
     private Kori poistaDublikaatit(Kori k)
@@ -228,7 +266,6 @@ public class Ikkuna extends JFrame {
         oos2.writeObject(boxmodel);
         oos.close();
         oos2.close();
-        tietokanta.laskeSaannot();
     }
     
     public Object avaaTietokanta() throws FileNotFoundException, IOException, ClassNotFoundException
@@ -247,6 +284,29 @@ public class Ikkuna extends JFrame {
         Object asiat = ois.readObject();
         ois.close();
         return asiat;
+    }
+    
+    public ArrayList<OstosLista> lisaaTietojaTietokantaan() throws FileNotFoundException, IOException
+    {
+        JFileChooser jfc = new JFileChooser();
+        ArrayList<OstosLista> paluulista = new ArrayList<>();
+        int valinta = jfc.showOpenDialog(this);
+        if (valinta == JFileChooser.APPROVE_OPTION)
+        {
+            
+            File f = jfc.getSelectedFile();
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            while (br.ready())
+            {
+                String line = br.readLine();
+                String[] arr = line.split(",");
+                ArrayList l = new ArrayList(Arrays.asList(arr));
+                OstosLista o = new OstosLista(l);
+                paluulista.add(o);
+            }
+        }
+            
+        return paluulista;
     }
     
 }
