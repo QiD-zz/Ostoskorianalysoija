@@ -39,7 +39,7 @@ public class Tietokanta implements Serializable {
         return rivit;
     }
     
-    public ArrayList<OstosLista> laskeSaannot()
+    public ArrayList<Asia> laskeSaannot()
     {
         ArrayList esineet = new ArrayList();
         for (int i = 0; i < rivit.size(); i++) {
@@ -63,6 +63,7 @@ public class Tietokanta implements Serializable {
             
         }
         ArrayList<OstosLista> yleiset = new ArrayList();
+        ArrayList<Asia> yleisetAsiat = new ArrayList();
 
         int kierros = 1;
         int montakoEhdokasta = esineet.size();
@@ -93,6 +94,9 @@ public class Tietokanta implements Serializable {
                 System.out.println(ehdokas+ "Osumat: "+ osumia + "S: "+ ((double)(osumia)/ (double)(koko) >= SUPPORT));
                 if ((double)(osumia)/ (double)(koko) >= SUPPORT)
                 {
+                    Asia a = new Asia(ehdokas.toString(), osumia);
+                    a.setSupport((double)(osumia)/ (double)(koko));
+                    yleisetAsiat.add(a);
                     System.out.println("OLEN YLEINEN: " + ehdokas);
                     yleiset.add(ehdokas);
                     uudetYleiset.add(ehdokas);
@@ -137,10 +141,11 @@ public class Tietokanta implements Serializable {
 
         }
         for (int i = 0; i < yleiset.size(); i++) {
-            System.out.println(yleiset.get(i));
+            Asia a = yleisetAsiat.get(i);
+            System.out.println("Asian "+a.toString()+" support on "+a.getSupport());
             
             
         }
-        return yleiset;
+        return yleisetAsiat;
     }
 }

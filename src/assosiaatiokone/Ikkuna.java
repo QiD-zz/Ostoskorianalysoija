@@ -194,10 +194,12 @@ public class Ikkuna extends JFrame {
         
         if (e.getSource().equals(laskeYleiset))
         {
-            ArrayList<OstosLista> yl = tietokanta.laskeSaannot();
+            ArrayList<Asia> yl = tietokanta.laskeSaannot();
+          //  ArrayList<OstosLista> yl = tietokanta.laskeSaannot();
             area.append("Tietokannassa on tällä hetkellä seuraavat yleiset asiat:\n");
             for (int i = 0; i < yl.size(); i++) {
-                area.append(yl.get(i).toString()+"\n");
+                Asia a = yl.get(i);
+                area.append(a.toString()+", jonka support on "+a.getSupport()+"\n");
                 
             }
         }
